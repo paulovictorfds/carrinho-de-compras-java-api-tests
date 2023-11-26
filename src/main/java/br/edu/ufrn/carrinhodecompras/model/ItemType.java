@@ -1,4 +1,4 @@
-package model;
+package br.edu.ufrn.carrinhodecompras.model;
 
 public enum ItemType {
   CASA,

@@ -1,4 +1,4 @@
-package com.ufrn.edu.br.carrinhodecompras;
+package br.edu.ufrn.carrinhodecompras;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

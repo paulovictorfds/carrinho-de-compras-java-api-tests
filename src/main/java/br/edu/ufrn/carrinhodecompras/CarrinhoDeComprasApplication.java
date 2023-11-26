@@ -1,4 +1,4 @@
-package com.ufrn.edu.br.carrinhodecompras;
+package br.edu.ufrn.carrinhodecompras;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

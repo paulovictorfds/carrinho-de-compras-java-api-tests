@@ -1,4 +1,4 @@
-package model;
+package br.edu.ufrn.carrinhodecompras.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
