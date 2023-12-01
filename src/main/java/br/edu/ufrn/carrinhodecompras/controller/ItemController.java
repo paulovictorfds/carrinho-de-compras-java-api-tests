@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/produtos")
 public class ItemController {
+
   private final ItemService itemService;
 
   @Autowired

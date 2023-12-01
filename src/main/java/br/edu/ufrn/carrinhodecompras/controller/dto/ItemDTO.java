@@ -12,6 +12,7 @@ public record ItemDTO(
     Double weight,
     ItemType type
 ) {
+
   public static ItemDTO fromItem(Item item) {
     return new ItemDTO(
         item.getId(),
