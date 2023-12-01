@@ -1,12 +1,14 @@
 package br.edu.ufrn.carrinhodecompras.controller;
 
 import br.edu.ufrn.carrinhodecompras.controller.dto.ItemDTO;
+import br.edu.ufrn.carrinhodecompras.exception.ItemNotFoundException;
 import br.edu.ufrn.carrinhodecompras.model.Item;
 import br.edu.ufrn.carrinhodecompras.service.ItemService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,5 +41,13 @@ public class ItemController {
     return items.stream()
         .map(ItemDTO::fromItem)
         .toList();
+  }
+
+  @GetMapping("/{id}")
+  public ItemDTO getItemById(@PathVariable long id) throws ItemNotFoundException {
+
+    Item item = itemService.findById(id);
+
+    return ItemDTO.fromItem(item);
   }
 }

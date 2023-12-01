@@ -1,8 +1,10 @@
 package br.edu.ufrn.carrinhodecompras.service;
 
+import br.edu.ufrn.carrinhodecompras.exception.ItemNotFoundException;
 import br.edu.ufrn.carrinhodecompras.model.Item;
 import br.edu.ufrn.carrinhodecompras.repository.ItemRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,12 @@ public class ItemService {
 
   public List<Item> findAll() {
     return itemRepository.findAll();
+  }
+
+  public Item findById(long id) throws ItemNotFoundException {
+    Optional<Item> item = itemRepository.findById(id);
+
+    return item.orElseThrow(ItemNotFoundException::new);
   }
 
 }
