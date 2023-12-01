@@ -9,7 +9,7 @@
     <version>3.2.0</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
-  <groupId>com.ufrn.edu.br</groupId>
+  <groupId>br.edu.ufrn</groupId>
   <artifactId>carrinho-de-compras</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>carrinho-de-compras</name>
