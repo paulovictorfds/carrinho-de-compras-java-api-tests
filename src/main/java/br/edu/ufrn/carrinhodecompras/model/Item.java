@@ -25,7 +25,7 @@ public class Item {
 
   private BigDecimal price;
 
-  private Double weight;
+  private int weight;
 
   private ItemType type;
 }

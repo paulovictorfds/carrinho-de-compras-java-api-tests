@@ -9,7 +9,7 @@ public record ItemDTO(
     String name,
     String description,
     BigDecimal price,
-    Double weight,
+    int weight,
     ItemType type
 ) {
 
