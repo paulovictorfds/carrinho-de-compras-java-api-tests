@@ -1,5 +1,6 @@
 package br.edu.ufrn.carrinhodecompras.service;
 
+import br.edu.ufrn.carrinhodecompras.controller.dto.CheckoutResponseDTO;
 import br.edu.ufrn.carrinhodecompras.model.Item;
 import br.edu.ufrn.carrinhodecompras.repository.ItemRepository;
 import java.math.BigDecimal;
@@ -17,10 +18,17 @@ public class CartService {
     this.itemRepository = itemRepository;
   }
 
-  public BigDecimal checkout(List<Long> itemIds) {
-    List<Item> items = itemRepository.findAllById(itemIds);
+  public CheckoutResponseDTO checkout(List<String> itemIds) {
+    List<Long> itemIdsLong = itemIds.stream()
+        .map(Long::valueOf)
+        .toList();
 
-    return calculateItemsValue(items).add(calculateShippingCost(items));
+    List<Item> items = itemRepository.findAllById(itemIdsLong);
+
+    BigDecimal itemsValue = calculateItemsValue(items);
+    BigDecimal shippingCost = calculateShippingCost(items);
+
+    return new CheckoutResponseDTO(itemsValue.doubleValue(), shippingCost.doubleValue());
   }
 
   private BigDecimal calculateItemsValue(List<Item> items) {
