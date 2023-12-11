@@ -31,7 +31,7 @@ public class CartService {
     return new CheckoutResponseDTO(itemsValue.doubleValue(), shippingCost.doubleValue());
   }
 
-  private BigDecimal calculateItemsValue(List<Item> items) {
+  public BigDecimal calculateItemsValue(List<Item> items) {
     BigDecimal itemsValue = items
         .stream()
         .map(Item::getPrice)
@@ -48,7 +48,7 @@ public class CartService {
     return itemsValue;
   }
 
-  private BigDecimal calculateShippingCost(List<Item> items) {
+  public BigDecimal calculateShippingCost(List<Item> items) {
     int totalWeight = items
         .stream()
         .mapToInt(Item::getWeight)
@@ -60,28 +60,36 @@ public class CartService {
 
       shippingCost = shippingCost.add(BigDecimal.TEN);
 
-    } else {
-
-      if (totalWeight > 50000) {
-        shippingCost = shippingCost
-            .add(new BigDecimal("7.00").multiply(
-                BigDecimal.valueOf(Math.max(0, totalWeight - 50000))));
-      }
-
-      if (totalWeight > 10000) {
-        shippingCost = shippingCost
-            .add(new BigDecimal("4.00").multiply(
-                BigDecimal.valueOf(Math.max(0, totalWeight - 10000))));
-      }
-
-      if (totalWeight > 2000) {
-        shippingCost = shippingCost
-            .add(new BigDecimal("2.00")
-                .multiply(BigDecimal
-                    .valueOf(Math.max(0, totalWeight - 2000))));
-      }
     }
+
+    if (totalWeight > 50000) {
+      shippingCost = shippingCost
+          .add(new BigDecimal("7.00").multiply(
+              BigDecimal.valueOf(totalWeight/1000)));
+    }
+
+    else if (totalWeight > 10000) {
+      System.out.println("TOTAL WHEIT " + totalWeight);
+      shippingCost = shippingCost
+          .add(new BigDecimal("4.00")
+                  .multiply(BigDecimal
+                          .valueOf(totalWeight/1000)));
+    }
+
+    else if (totalWeight > 2000) {
+      shippingCost = shippingCost
+          .add(new BigDecimal("2.00")
+              .multiply(BigDecimal
+                  .valueOf(totalWeight/1000)));
+    }
+
 
     return shippingCost;
   }
+
+
+
+
+
+
 }

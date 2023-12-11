@@ -4,6 +4,6 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class CheckoutRequestDTO {
+public class  CheckoutRequestDTO {
   List<String> itemIds;
 }

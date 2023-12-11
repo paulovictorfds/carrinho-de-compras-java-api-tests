@@ -24,6 +24,9 @@ public class CartController {
   @PostMapping("/checkout")
   public CheckoutResponseDTO checkout(@RequestBody CheckoutRequestDTO itemIds) {
 
+    System.out.println("AAAA : " + itemIds.getItemIds());
+
     return cartService.checkout(itemIds.getItemIds());
   }
+
 }
