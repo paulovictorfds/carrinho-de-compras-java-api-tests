@@ -1,6 +1,8 @@
 package br.edu.ufrn.carrinhodecompras.service;
 
 
+import br.edu.ufrn.carrinhodecompras.controller.dto.CheckoutResponseDTO;
+import br.edu.ufrn.carrinhodecompras.exception.ItemNotFoundException;
 import br.edu.ufrn.carrinhodecompras.model.Cart;
 import br.edu.ufrn.carrinhodecompras.model.Item;
 import br.edu.ufrn.carrinhodecompras.model.ItemType;
@@ -10,12 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,10 +32,13 @@ public class CartServiceTest {
     @InjectMocks
     CartService cartService;
 
+    @InjectMocks
+    ItemService itemService;
+
+
     @Mock
     ItemRepository repository;
 
-    Item item;
 
     BigDecimal valorItem;
 
@@ -40,10 +47,7 @@ public class CartServiceTest {
     public void setup(){
         MockitoAnnotations.initMocks(this);
         this.cartService = new CartService(repository);
-
-
-        item = new Item("detergente", "Detergente pra lavar loucas", 20, 200, ItemType.COZINHA);
-
+        this.itemService = new ItemService(repository);
 
     }
 
@@ -59,8 +63,6 @@ public class CartServiceTest {
         items.add(new Item("Jaqueta", "Jqueta preta", 50, 200, ItemType.ROUPA));
         items.add(new Item("abajour", "decoracao", 20, 200, ItemType.CASA));
         items.add(new Item("escova", "Escova de dentes", 20, 200, ItemType.CASA));
-
-//        when(cartService.calculateItemsValue(items)).thenReturn(valorItem);
 
         for (Item item1 : items) {
             valorFinal += item1.getPrice().doubleValue();
@@ -118,7 +120,7 @@ public class CartServiceTest {
             valorFinal = valorFinal.add(item.getPrice());
         }
 
-        BigDecimal desconto = valorFinal.multiply(BigDecimal.valueOf(0.2)); // Desconto de 10%
+        BigDecimal desconto = valorFinal.multiply(BigDecimal.valueOf(0.2)); // Desconto de 20%
         BigDecimal valorFinalComDesconto = valorFinal.subtract(desconto);
 
         BigDecimal valorItem = cartService.calculateItemsValue(items);
@@ -347,7 +349,59 @@ public class CartServiceTest {
     }
 
 
+    @Test
+    void testeCheckout(){
 
+
+        int pesoFinal = 0;
+        double valorFinal = 0.0;
+
+
+        itemService.insertItem(new Item("detergente", "Detergente pra lavar loucas", 200, 15000, ItemType.COZINHA));
+        itemService.insertItem(new Item("esponja", "Esponja pra lavar loucas", 500, 15000, ItemType.COZINHA));
+        itemService.insertItem(new Item("Jaqueta", "Jqueta preta", 150, 15000, ItemType.ROUPA));
+        itemService.insertItem(new Item("abajour", "decoracao", 200, 15000, ItemType.CASA));
+        itemService.insertItem(new Item("escova", "Escova de dentes", 100, 200, ItemType.CASA));
+
+        List<String> itemIds = new ArrayList<>();
+        itemIds.add("1");
+        itemIds.add("2");
+
+        CheckoutResponseDTO checkout = cartService.checkout(itemIds);
+
+
+        for(Item item: itemService.findAll()){
+            valorFinal += item.getPrice().doubleValue();
+        }
+
+        double desconto = valorFinal * 0.2; // Desconto de 20%
+        double valorFinalComDesconto = valorFinal - desconto;
+
+        for (Item item: itemService.findAll()){
+            pesoFinal += item.getWeight();
+        }
+
+        int shippingCost = 7 * (pesoFinal / 1000); // acima de 50kg
+
+
+
+        CheckoutResponseDTO responseEsperada = new CheckoutResponseDTO(valorFinalComDesconto, shippingCost);
+
+        assertEquals(responseEsperada, checkout);
+
+
+    }
+
+
+    @Test
+    void testFindItemById() throws ItemNotFoundException {
+        Item itemMock = new Item("detergente", "Detergente pra lavar loucas", 200, 15000, ItemType.COZINHA);
+
+        Mockito.when(repository.findById(Mockito.anyLong())).thenReturn(Optional.of(itemMock));
+
+        Item item = itemService.findById(1);
+        assertEquals(itemMock, item);
+    }
 
 
 
